@@ -1,4 +1,4 @@
-"""reg_spare_parts URL Configuration
+"""RegSpareParts URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.2/topics/http/urls/

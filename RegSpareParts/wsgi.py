@@ -1,5 +1,5 @@
 """
-WSGI config for reg_spare_parts project.
+WSGI config for RegSpareParts project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'reg_spare_parts.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'RegSpareParts.settings')
 
 application = get_wsgi_application()
