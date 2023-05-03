@@ -37,6 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'rest_framework',
+    'django_filters',
+    'rest_framework.authtoken',
+    'djoser',
+    'users.apps.UsersConfig',
+    'api.apps.ApiConfig',
+    'reg.apps.RegConfig',
+    'core.apps.CoreConfig'
+
 ]
 
 MIDDLEWARE = [
@@ -70,15 +79,24 @@ TEMPLATES = [
 WSGI_APPLICATION = 'RegSpareParts.wsgi.application'
 
 
+
+
+
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': os.getenv('DB_ENGINE', default='django.db.backends.sqlite3'),
+        'NAME': os.getenv('DB_NAME', default=os.path.join(BASE_DIR,
+                                                          'db.sqlite3')),
+        'USER': os.getenv('POSTGRES_USER', default='user'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', default='pass'),
+        'HOST': os.getenv('DB_HOST', default='db'),
+        'PORT': os.getenv('DB_PORT', default=5432)
     }
 }
+
 
 
 # Password validation
@@ -103,7 +121,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru-ru'
 
 TIME_ZONE = 'UTC'
 
@@ -118,3 +136,36 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+AUTH_USER_MODEL = 'users.User'
+
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.AllowAny', ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication', ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination'
+                                + '.PageNumberPagination',
+    'PAGE_SIZE': 3,
+}
+
+DJOSER = {
+    'LOGIN_FIELD': 'username',
+    'HIDE_USERS': False,
+    'PERMISSIONS': {
+        # 'resipe': ('api.permissions.AuthorStaffOrReadOnly,',),
+        # 'recipe_list': ('api.permissions.AuthorStaffOrReadOnly',),
+        # 'user': ('api.permissions.OwnerUserOrReadOnly',),
+        # 'user_list': ('api.permissions.OwnerUserOrReadOnly',),
+    },
+    'SERIALIZERS': {
+        'user': 'api.serializers.UserSerializer',
+        'user_list': 'api.serializers.UserSerializer',
+        'current_user': 'api.serializers.UserSerializer',
+        'user_create': 'api.serializers.UserSerializer',
+    },
+}
