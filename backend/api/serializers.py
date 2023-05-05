@@ -5,7 +5,7 @@ import uuid
 import six
 from django.core.files.base import ContentFile
 from django.shortcuts import get_object_or_404
-from reg.models import SpareParts
+from reg.models import Categoryes, SpareParts, Manufacturers
 
 from rest_framework import serializers
 
@@ -71,3 +71,19 @@ class SparePartSerializer(serializers.ModelSerializer):
             'change_date',
             'create_date',
             'review_date',)
+
+class CategoryesSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Categoryes
+        fields = (
+            'id',
+            'name',)
+
+class ManufacturersSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Manufacturers
+        fields = (
+            'id',
+            'name',)

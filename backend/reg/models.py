@@ -1,10 +1,16 @@
+
+from django.contrib.auth import get_user_model
 from django.db import models
 
 
+User = get_user_model()
+
 class Manufacturers(models.Model):
     name = models.CharField("Наименование",
-                            max_length=150)
-    
+                            max_length=150,
+                            unique=True,
+                            null=False)
+
     class Meta:
         verbose_name = 'Производитель'
         verbose_name_plural = 'Производители'
@@ -12,10 +18,13 @@ class Manufacturers(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+
 class Categoryes(models.Model):
     name = models.CharField("Наименование",
-                            max_length=150)
-    
+                            max_length=150,
+                            unique=True,
+                            null=False)
+
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
@@ -53,3 +62,35 @@ class SpareParts(models.Model):
 
     def __str__(self):
         return f'{self.name}'
+
+
+class Events(models.Model):
+    CHOICES = (
+        ('POST', 'Создание'),
+        ('DELETE', 'Удаление'),
+        ('PATCH', 'Изменение'),
+    )
+    event_type = models.CharField("Наименование",
+                                  max_length=150,
+                                  choices=CHOICES)
+    message = models.TextField("Наименование")
+    data = models.TextField("Данные",
+                            default="")
+    user = models.ForeignKey(User,
+                             "Пользователь")
+    create_date = models.DateTimeField("Дата", auto_now=True)
+
+    class Meta:
+        abstract = True
+
+
+class CategoryesEvents(Events):
+    id_record = models.ForeignKey(Categoryes,
+                                  "Запись")
+
+    class Meta:
+        verbose_name = 'Событие'
+        verbose_name_plural = 'События'
+
+    def __str__(self):
+        return f'{self.event_type} | {self.user} | {self.message}'

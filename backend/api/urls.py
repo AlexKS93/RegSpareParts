@@ -1,5 +1,5 @@
 from django.urls import include, path
-from reg.views import SparePartsViewSet
+from reg.views import CategoryesViewSet, SparePartsViewSet, ManufacturersViewSet
 from rest_framework import routers
 
 
@@ -11,12 +11,12 @@ router.register(r'spareparts',
                 SparePartsViewSet,
                 basename="spareparts"
                 )
-# router.register(r'ingredients',
-#                 IngredientsViewSet,
-#                 basename="ingredients")
-# router.register(r'recipes',
-#                 RecieptsViewSet,
-#                 basename="recipes")
+router.register(r'categoryes',
+                CategoryesViewSet,
+                basename="categoryes")
+router.register(r'manufacturers',
+                ManufacturersViewSet,
+                basename="manufacturers")
 
 urlpatterns = [
     path('', include(router.urls)),
