@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Hello, Bootstrap Table!</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="/docs/5.1/assets/brand/bootstrap-logo.svg" alt="" width="30" height="24" class="d-inline-block align-text-top">
+          АИС "Менеджмент АСУТП"
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключатель навигации">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link active" aria-current="page" href="#">Главная</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Журнал ЗИП</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Журнал отказов</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled">Журнал  ежедневных работ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link disabled">Журнал плановых работ</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div id="table">
+      <bootstrap-table :columns="columns" :data="data" :options="options"></bootstrap-table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table-vue.min.js"></script>
+    <script src="file:///D:/project/RegSpareParts/static/ajax/libs/axios/0.20.0/axios.min.js"></script>
+    <script>
+      new Vue({
+        el: '#table',
+        components: {
+          'BootstrapTable': BootstrapTable
+        },
+        data: {
+          columns: [
+    
+            {
+              title: 'state',
+              field: 'state',
+              checkbox: true,
+            },
+            {
+              title: 'Item ID',
+              field: 'id'
+            },
+            {
+              field: 'name',
+              title: 'Item Name'
+            }, 
+            {
+              field: 'price',
+              title: 'Item Price'
+            },
+
+
+          ],
+          data: [
+            {
+              id: 1,
+              name: 'Item 1',
+              price: '$1',
+              state: false
+            },
+            {
+              id: 2,
+              name: 'Item 2',
+              price: '$2'
+            },
+            {
+              id: 3,
+              name: 'Item 3',
+              price: '$3'
+            },
+            {
+              id: 4,
+              name: 'Item 4',
+              price: '$4'
+            },
+            {
+              id: 5,
+              name: 'Item 5',
+              price: '$5'
+            }
+          ],
+          options: {
+            search: true,
+            showColumns: true,
+            //checkboxHeader: true
+          }
+        },
+        mounted() {
+              // Set the initial number of items
+              this.getApiFields_list();
+              this.getApiOtkaz_list();
+ 
+        },
+        methods: {
+              getApiFields_list: function()
+                {
+                    //const vm = this;
+                    axios.get('http://127.0.0.1:8000/api/spareparts/')
+                    .then(function(response){
+                    this.data.columns = response.data
+                    
+                    }.bind(this));
+                },
+              getApiOtkaz_list: function()
+                {
+                    //const vm = this;
+                    axios.get('/api_get_otkaz_list/')
+                    .then(function(response){
+                    this.data.data = response.data
+                    }.bind(this));
+                },
+            }
+      })
+    </script>
+  </body>
+</html>

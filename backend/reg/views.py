@@ -14,6 +14,15 @@ class SparePartsViewSet(viewsets.ModelViewSet):
     queryset = SpareParts.objects.all()
     serializer_class = SparePartSerializer
 
+    # def perform_create(self, serializer):
+    #     serializer.save()
+    #     rec = SpareParts.objects.get(**serializer.validated_data)
+    #     create_event(self.request,
+    #                     'POST',
+    #                     CategoryesEvents,
+    #                     serializer.validated_data,
+    #                     rec)
+
 
 class CategoryesViewSet(viewsets.ModelViewSet):
     queryset = Categoryes.objects.all()
@@ -26,7 +35,6 @@ class CategoryesViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save()
         rec = Categoryes.objects.get(**serializer.validated_data)
-        print(rec)
         create_event(self.request,
                      'POST',
                      CategoryesEvents,
