@@ -55,3 +55,7 @@ def create_event(request, event_type, object, data, rec):
         user=request.user,
         data={**data}
     )
+
+
+def index(request):
+    return render(request, 'main.html')

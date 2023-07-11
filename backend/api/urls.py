@@ -1,4 +1,5 @@
 from django.urls import include, path
+from api.views import get_fields_list
 from reg.views import CategoryesViewSet, SparePartsViewSet, ManufacturersViewSet
 from rest_framework import routers
 
@@ -21,4 +22,5 @@ router.register(r'manufacturers',
 urlpatterns = [
     path('', include(router.urls)),
     path('auth/', include('djoser.urls.authtoken')),
+    path('get_fields_list/', get_fields_list)
 ]
