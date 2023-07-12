@@ -16,5 +16,5 @@ def get_fields_list(request):
                                  'field': 'status',
                                  'checkbox': 'true'})
             continue
-        output_field.append({'title': fields_list[item], 'field': item})
+        output_field.append({'title': fields_list[item], 'field': item, 'sortable': 'true'})
     return JsonResponse([output_field], safe=False)

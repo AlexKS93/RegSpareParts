@@ -12,7 +12,7 @@
     <script src="/static/ajax/libs/axios/0.20.0/axios.min.js"></script>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-yellow bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
           <img src="static/favicon.ico" alt="" width="30" height="24" class="d-inline-block align-text-top">
@@ -43,7 +43,7 @@
       </div>
     </nav>
     <div id="table">
-      <bootstrap-table :columns="columns" :data="data" :options="options"></bootstrap-table>
+      <bootstrap-table :columns="columns" :data="data" :options="options" ></bootstrap-table>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jquery/dist/jquery.min.js"></script>
@@ -51,6 +51,8 @@
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table.min.js"></script>
     <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/bootstrap-table-vue.min.js"></script>
+    <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/extensions/toolbar/bootstrap-table-toolbar.min.js"></script>
+
 
     <script>
       new Vue({
@@ -60,65 +62,27 @@
         },
         data: () => ({
           columns :[
-    
-           /* {
-              title: 'state',
-              field: 'state',
-              checkbox: true,
-            },
-            {
-              title: 'Item ID',
-              field: 'id'
-            },
-            {
-              field: 'name',
-              title: 'Item Name'
-            }, 
-            {
-              field: 'price',
-              title: 'Item Price'
-            },*/
-
-
           ],
           data: [
-            /*{
-              id: 1,
-              name: 'Item 1',
-              price: '$1',
-              state: false
-            },
-            {
-              id: 2,
-              name: 'Item 2',
-              price: '$2'
-            },
-            {
-              id: 3,
-              name: 'Item 3',
-              price: '$3'
-            },
-            {
-              id: 4,
-              name: 'Item 4',
-              price: '$4'
-            },
-            {
-              id: 5,
-              name: 'Item 5',
-              price: '$5'
-            }*/
           ],
           options: {
             search: true,
+            advancedSearch: true,
+            idTable: "advancedTable",
             showColumns: true,
-            //checkboxHeader: true
+            detailView: true,
+            detailViewIcon: false,
+            detailViewByClick: true,
+            detailFormatter: 'detailFormatter'
           }
         }),
         mounted() {
               // Set the initial number of items
               this.getApiFields_list();
               this.getApiOtkaz_list();
+              console.log(this.data['data']);
+              //this.options['detailFormatter'] = ('<p><b>' + 1 + ':</b> ' + 2 + '</p>');
+              //this.$refs.table.detailFormatter(parameter)
  
         },
         methods: {
@@ -138,11 +102,24 @@
                     axios.get('api/spareparts')
                     .then(function(response){
                     this.data = response.data['results'];
-                    console.log(response.data['results']);
+                    //console.log(response.data['results']);
                     }.bind(this));
                 },
             }
       })
+    </script>
+    <script>
+      function detailFormatter(index, row) {
+        var html = []
+        $.each(row, 
+        function (key, value) {
+          if (key == 'change_date')
+          {html.push('<p><b>' + 'Последнее изменение' + ':</b> ' + value + '</p>');}
+        }
+        )
+
+        return html.join('')
+      }
     </script>
   </body>
 </html>
