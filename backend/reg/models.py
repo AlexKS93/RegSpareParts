@@ -52,9 +52,9 @@ class SpareParts(models.Model):
     place = models.CharField("Место",
                              max_length=150)
     floor = models.IntegerField("Этаж")
-    change_date = models.DateTimeField("Дата изменения")
-    create_date = models.DateTimeField("Дата добавления")
-    review_date = models.DateTimeField("Дата ревизии")
+    change_date = models.DateTimeField("Дата изменения", auto_now=True)
+    create_date = models.DateTimeField("Дата добавления", auto_now=True)
+    review_date = models.DateTimeField("Дата ревизии", auto_now=True)
 
     class Meta:
         verbose_name = 'Запасная часть'
@@ -91,6 +91,17 @@ class CategoryesEvents(Events):
     class Meta:
         verbose_name = 'Событие'
         verbose_name_plural = 'События'
+
+    def __str__(self):
+        return f'{self.event_type} | {self.user} | {self.message}'
+    
+class SparePartsEvents(Events):
+    id_record = models.ForeignKey(SpareParts,
+                                  "Запись")
+
+    class Meta:
+        verbose_name = 'Событие журнала ЗИП'
+        verbose_name_plural = 'События журнала ЗИП'
 
     def __str__(self):
         return f'{self.event_type} | {self.user} | {self.message}'

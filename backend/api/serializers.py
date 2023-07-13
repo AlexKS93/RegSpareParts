@@ -56,6 +56,8 @@ class UserSerializer(serializers.ModelSerializer):
     #             and user.follower.filter(author=obj).exists())
 
 class SparePartSerializer(serializers.ModelSerializer):
+    manufacturer = serializers.StringRelatedField()
+    category = serializers.StringRelatedField()
 
     class Meta:
         model = SpareParts

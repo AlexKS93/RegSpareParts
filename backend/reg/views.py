@@ -2,7 +2,7 @@ from api.serializers import (CategoryesSerializer,
                              SparePartSerializer,
                              ManufacturersSerializer)
 from reg.filters import CategoryesFilter
-from reg.models import Categoryes, SpareParts, Manufacturers, CategoryesEvents
+from reg.models import Categoryes, SpareParts, Manufacturers, CategoryesEvents, SparePartsEvents
 from rest_framework import (decorators, filters, permissions, response,
                             serializers, status, viewsets)
 
@@ -14,14 +14,14 @@ class SparePartsViewSet(viewsets.ModelViewSet):
     queryset = SpareParts.objects.all()
     serializer_class = SparePartSerializer
 
-    # def perform_create(self, serializer):
-    #     serializer.save()
-    #     rec = SpareParts.objects.get(**serializer.validated_data)
-    #     create_event(self.request,
-    #                     'POST',
-    #                     CategoryesEvents,
-    #                     serializer.validated_data,
-    #                     rec)
+    def perform_create(self, serializer):
+        serializer.save()
+        rec = SpareParts.objects.get(**serializer.validated_data)
+        create_event(self.request,
+                        'POST',
+                        SparePartsEvents,
+                        serializer.validated_data,
+                        rec)
 
 
 class CategoryesViewSet(viewsets.ModelViewSet):
