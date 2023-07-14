@@ -5,6 +5,7 @@ from django.db import models
 
 User = get_user_model()
 
+
 class Manufacturers(models.Model):
     name = models.CharField("Наименование",
                             max_length=150,

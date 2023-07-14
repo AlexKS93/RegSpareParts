@@ -1,6 +1,7 @@
 from api.serializers import (CategoryesSerializer,
                              SparePartSerializer,
-                             ManufacturersSerializer)
+                             ManufacturersSerializer,
+                             SparePartPOSTSerializer)
 from reg.filters import CategoryesFilter
 from reg.models import Categoryes, SpareParts, Manufacturers, CategoryesEvents, SparePartsEvents
 from rest_framework import (decorators, filters, permissions, response,
@@ -22,6 +23,11 @@ class SparePartsViewSet(viewsets.ModelViewSet):
                         SparePartsEvents,
                         serializer.validated_data,
                         rec)
+
+    def get_serializer_class(self, *args, **kwargs):
+        if self.request.method == 'GET':
+            return SparePartSerializer
+        return SparePartPOSTSerializer
 
 
 class CategoryesViewSet(viewsets.ModelViewSet):
@@ -45,6 +51,7 @@ class CategoryesViewSet(viewsets.ModelViewSet):
 class ManufacturersViewSet(viewsets.ModelViewSet):
     queryset = Manufacturers.objects.all()
     serializer_class = ManufacturersSerializer
+    pagination_class = None
 
 
 def create_event(request, event_type, object, data, rec):

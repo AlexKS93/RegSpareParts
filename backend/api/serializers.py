@@ -62,6 +62,40 @@ class SparePartSerializer(serializers.ModelSerializer):
     class Meta:
         model = SpareParts
         fields = (
+            'id',
+            'name',                
+            'tmc',
+            'manufacturer',
+            'category',
+            'count',
+            'note',
+            'place',
+            'floor',
+            'change_date',
+            'create_date',
+            'review_date',)
+        
+
+class CategoryesPOSTSerializer(serializers.ModelSerializer):
+
+    id = serializers.PrimaryKeyRelatedField(
+        source='Categoryes',
+        queryset=Categoryes.objects.all()
+    )
+
+    class Meta:
+        fields = ('id',)
+        model = Categoryes
+
+class SparePartPOSTSerializer(serializers.ModelSerializer):
+    #manufacturer = serializers.StringRelatedField()
+    category = CategoryesPOSTSerializer(many=True,
+                                        source='categoryes_set')
+
+    class Meta:
+        model = SpareParts
+        fields = (
+            'id',
             'name',                
             'tmc',
             'manufacturer',
@@ -78,14 +112,11 @@ class CategoryesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Categoryes
-        fields = (
-            'id',
-            'name',)
+        fields = ('name',)
 
 class ManufacturersSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Manufacturers
         fields = (
-            'id',
             'name',)

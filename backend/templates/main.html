@@ -103,16 +103,35 @@
                       </template> -->
                       <div v-for="column in columns">
                         <div v-if="column.field != 'status'">
-                          <label  v-bind:for="column.field">{{column.title}}: </label>
-                          <input v-bind:id="column.field" type="text" v-bind:name="column.field" v-bind:value="column.field">
-                          <br>
+                          <div v-if="column.field == 'category'">
+                            <label  v-bind:for="column.field">{{column.title}}: </label>
+                            <!-- <input v-bind:id="column.field" type="text" v-bind:name="column.field"> -->
+                            <select v-bind:id="column.field" v-bind:name="column.field">
+                              
+                                <option v-for="category in categoryes" value="category.name">{{ category.name }}</option>
+     
+                            </select>
+                            <br>
+                          </div>
+                          <div v-else-if="column.field == 'manufacturer'">
+                            <label  v-bind:for="column.field">{{column.title}}: </label>
+                            <select>
+                              <option v-for="manufacturer in manufactures" value="manufacturer.name">{{ manufacturer.name }}</option>
+                            </select>
+                            <br>
+                          </div>
+                          <div v-else>
+                            <label  v-bind:for="column.field">{{column.title}}: </label>
+                            <input v-bind:id="column.field" type="text" v-bind:name="column.field">
+                            <br>
+                          </div>
                         </div>
                       </div>
                         
                         {% endverbatim %}
                     </div>
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-secondary">Сохранить</button>
+                      <!-- <button type="button" class="btn btn-secondary">Сохранить</button> -->
                       <input type="submit" class="btn btn-primary" value="Добавить"></input>
                     </div>
               </form>
@@ -134,9 +153,12 @@
         },
         data: () => ({
           columns :[
-            
           ],
           data: [
+          ],
+          manufactures: [
+          ],
+          categoryes: [
           ],
           options: {
             showExport: true,
@@ -157,7 +179,9 @@
         created() {
               // Set the initial number of items
               this.getApiFields_list();
-              this.getApiOtkaz_list();
+              this.getApiSpareParts_list();
+              this.getApiCategory_list();
+              this.getApiManufacture_list();
               
 
               //this.options['detailFormatter'] = ('<p><b>' + 1 + ':</b> ' + 2 + '</p>');
@@ -184,7 +208,27 @@
                     }.bind(this));
                     
                 },
-              getApiOtkaz_list: function()
+                getApiCategory_list: function()
+                {
+                    //const vm = this;
+                    axios.get('/api/categoryes/')
+                    .then(function(response){
+                    this.categoryes = response.data;
+                    
+                    }.bind(this));
+                    
+                },
+                getApiManufacture_list: function()
+                {
+                    //const vm = this;
+                    axios.get('/api/manufacturers/')
+                    .then(function(response){
+                    this.manufactures = response.data;
+                    
+                    }.bind(this));
+                    
+                },
+              getApiSpareParts_list: function()
                 {
                     //const vm = this;
                     axios.get('api/spareparts')
