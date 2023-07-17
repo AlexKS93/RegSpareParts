@@ -15,19 +15,19 @@ class SparePartsViewSet(viewsets.ModelViewSet):
     queryset = SpareParts.objects.all()
     serializer_class = SparePartSerializer
 
-    def perform_create(self, serializer):
-        serializer.save()
-        rec = SpareParts.objects.get(**serializer.validated_data)
-        create_event(self.request,
-                        'POST',
-                        SparePartsEvents,
-                        serializer.validated_data,
-                        rec)
+    # def perform_create(self, serializer):
+    #     serializer.save()
+    #     rec = SpareParts.objects.get(**serializer.validated_data)
+    #     create_event(self.request,
+    #                     'POST',
+    #                     SparePartsEvents,
+    #                     serializer.validated_data,
+    #                     rec)
 
-    def get_serializer_class(self, *args, **kwargs):
-        if self.request.method == 'GET':
-            return SparePartSerializer
-        return SparePartPOSTSerializer
+    # def get_serializer_class(self, *args, **kwargs):
+    #     if self.request.method == 'GET':
+    #         return SparePartSerializer
+    #     return SparePartPOSTSerializer
 
 
 class CategoryesViewSet(viewsets.ModelViewSet):
