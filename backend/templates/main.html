@@ -106,14 +106,14 @@
                           <div v-if="column.field == 'category'">
                             <label  v-bind:for="column.field">{{column.title}}: </label>
                             <select v-bind:id="column.field" v-bind:name="column.field">
-                                <option v-for="category in categoryes" value="category.name" >{{ category.name }}</option>
+                                <option v-for="category in categoryes" v-bind:value="category.id">{{ category.name }}</option>
                             </select>
                             <br>
                           </div>
                           <div v-else-if="column.field == 'manufacturer'">
                             <label  v-bind:for="column.field">{{column.title}}: </label>
                             <select v-bind:id="column.field" v-bind:name="column.field">
-                              <option v-for="manufacturer in manufactures" value="manufacturer.name">{{ manufacturer.name }}</option>
+                              <option v-for="manufacturer in manufactures" v-bind:value="manufacturer.id">{{ manufacturer.name }}</option>
                             </select>
                             <br>
                           </div>

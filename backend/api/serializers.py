@@ -56,8 +56,8 @@ class UserSerializer(serializers.ModelSerializer):
     #             and user.follower.filter(author=obj).exists())
 
 class SparePartSerializer(serializers.ModelSerializer):
-    manufacturer = serializers.StringRelatedField()
-    category = serializers.StringRelatedField()
+    # manufacturer = serializers.PrimaryKeyRelatedField(queryset=Categoryes.objects.all())
+    # category = serializers.PrimaryKeyRelatedField(queryset=Manufacturers.objects.all())
 
     class Meta:
         model = SpareParts
@@ -112,11 +112,11 @@ class CategoryesSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Categoryes
-        fields = ('name',)
+        fields = ('id','name',)
 
 class ManufacturersSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Manufacturers
         fields = (
-            'name',)
+            'id', 'name',)
