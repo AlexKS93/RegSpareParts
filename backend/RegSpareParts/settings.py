@@ -157,8 +157,8 @@ DJOSER = {
     'LOGIN_FIELD': 'username',
     'HIDE_USERS': False,
     'PERMISSIONS': {
-        # 'resipe': ('api.permissions.AuthorStaffOrReadOnly,',),
-        # 'recipe_list': ('api.permissions.AuthorStaffOrReadOnly',),
+        'SpareParts': ('rest_framework.permissions.IsAuthenticated',),
+        #'SpareParts_list': ('api.permissions.AuthorStaffOrReadOnly',),
         # 'user': ('api.permissions.OwnerUserOrReadOnly',),
         # 'user_list': ('api.permissions.OwnerUserOrReadOnly',),
     },
