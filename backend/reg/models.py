@@ -36,7 +36,7 @@ class Categoryes(models.Model):
 
 class SpareParts(models.Model):
     name = models.CharField("Наименование",
-                            max_length=150)
+                            max_length=150,)
     tmc = models.CharField("ТМЦ",
                            max_length=150,
                            null=True,
@@ -95,7 +95,8 @@ class CategoryesEvents(Events):
 
     def __str__(self):
         return f'{self.event_type} | {self.user} | {self.message}'
-    
+
+
 class SparePartsEvents(Events):
     id_record = models.ForeignKey(SpareParts,
                                   "Запись")

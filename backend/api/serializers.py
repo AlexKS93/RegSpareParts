@@ -120,3 +120,6 @@ class ManufacturersSerializer(serializers.ModelSerializer):
         model = Manufacturers
         fields = (
             'id', 'name',)
+
+
+

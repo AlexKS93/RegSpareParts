@@ -22,5 +22,6 @@ router.register(r'manufacturers',
 urlpatterns = [
     path('', include(router.urls)),
     path('auth/', include('djoser.urls.authtoken')),
-    path('get_fields_list/', get_fields_list)
+    path('get_fields_list/', get_fields_list),
+    path('users/', include('users.urls')),
 ]

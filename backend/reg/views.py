@@ -5,6 +5,7 @@ from api.serializers import (CategoryesSerializer,
 from reg.filters import CategoryesFilter
 from reg.models import Categoryes, SpareParts, Manufacturers, CategoryesEvents, SparePartsEvents
 from users.models import User
+from users.models import User
 from rest_framework import (decorators, filters, permissions, response,
                             serializers, status, viewsets)
 
@@ -19,6 +20,8 @@ class SparePartsViewSet(viewsets.ModelViewSet):
     serializer_class = SparePartSerializer
 
     def perform_create(self, serializer):
+        if SpareParts.objects.filter(**serializer.validated_data).exists():
+            return response.Response({**serializer.validated_data}, status.HTTP_400_BAD_REQUEST)
         serializer.save()
         rec = SpareParts.objects.get(**serializer.validated_data)
         create_event(self.request,
@@ -26,6 +29,15 @@ class SparePartsViewSet(viewsets.ModelViewSet):
                         SparePartsEvents,
                         serializer.validated_data,
                         rec)
+    # def create(self, serializer):
+    #     serializer = self.get_serializer(data=self.request.data)
+    #     serializer.is_valid(raise_exception=True)
+    #     self.perform_create(serializer)
+    #     user = User.objects.get(username=serializer.instance.username)
+    #     password = self.request.data['password']
+    #     user.set_password(password)
+    #     user.save()
+    #     return response.Response(serializer.data, status.HTTP_200_OK)
 
     # def get_serializer_class(self, *args, **kwargs):
     #     if self.request.method == 'GET':
@@ -71,3 +83,6 @@ def create_event(request, event_type, object, data, rec):
 
 def index(request):
     return render(request, 'main.html')
+
+def login(request):
+    return render(request, 'login.html')
