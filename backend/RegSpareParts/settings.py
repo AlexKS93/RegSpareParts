@@ -135,8 +135,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
-# STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
@@ -145,7 +145,7 @@ AUTH_USER_MODEL = 'users.User'
 
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny', ],
+        'rest_framework.permissions.IsAuthenticatedOrReadOnly', ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication', ],
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination'
@@ -157,10 +157,10 @@ DJOSER = {
     'LOGIN_FIELD': 'username',
     'HIDE_USERS': False,
     'PERMISSIONS': {
-        'SpareParts': ('rest_framework.permissions.IsAuthenticated',),
-        #'SpareParts_list': ('api.permissions.AuthorStaffOrReadOnly',),
-        # 'user': ('api.permissions.OwnerUserOrReadOnly',),
-        # 'user_list': ('api.permissions.OwnerUserOrReadOnly',),
+        'SpareParts': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
+        'SpareParts_list': ('api.permissions.IsAuthenticatedOrReadOnly',),
+        'user': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
+        'user_list': ('rest_framework.permissions.IsAuthenticatedOrReadOnly',),
     },
     'SERIALIZERS': {
         'user': 'api.serializers.UserSerializer',
@@ -169,11 +169,3 @@ DJOSER = {
         'user_create': 'api.serializers.UserSerializer',
     },
 }
-
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-STATIC_URL = '/static/'
-
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static")
-]

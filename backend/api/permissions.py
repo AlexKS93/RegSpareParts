@@ -1,6 +1,6 @@
 from rest_framework import permissions
 
-from users.models import MODERATOR, USER
+from users.models import ADMIN, USER
 
 
 class IsAuthenticatedOrDeny(permissions.IsAuthenticated):
@@ -29,8 +29,6 @@ class OwnerUserOrReadOnly(permissions.IsAuthenticated):
                               obj):
         return (request.method in permissions.SAFE_METHODS
                 or request.user.is_authenticated
-                and request.user.is_active
-                and request.user == obj.author
                 or request.user.is_staff)
 
 
