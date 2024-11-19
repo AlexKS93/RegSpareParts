@@ -55,15 +55,20 @@ class UserSerializer(serializers.ModelSerializer):
     #     return (not (user.is_anonymous or (user == obj))
     #             and user.follower.filter(author=obj).exists())
 
-class SparePartSerializer(serializers.ModelSerializer):
-    # manufacturer = serializers.PrimaryKeyRelatedField(queryset=Categoryes.objects.all())
-    # category = serializers.PrimaryKeyRelatedField(queryset=Manufacturers.objects.all())
 
+class SparePartSerializer(serializers.ModelSerializer):
+    manufacturer = serializers.StringRelatedField(
+        source='manufacturer.name',
+    )
+    #category = serializers.PrimaryKeyRelatedField(queryset=Categoryes.objects.all())
+    category = serializers.StringRelatedField(
+        source='category.name',
+    )
     class Meta:
         model = SpareParts
         fields = (
             'id',
-            'name',                
+            'name',
             'tmc',
             'manufacturer',
             'category',
@@ -89,8 +94,10 @@ class CategoryesPOSTSerializer(serializers.ModelSerializer):
 
 class SparePartPOSTSerializer(serializers.ModelSerializer):
     #manufacturer = serializers.StringRelatedField()
-    category = CategoryesPOSTSerializer(many=True,
-                                        source='categoryes_set')
+    # category = CategoryesPOSTSerializer(many=True,
+    #                                     source='categoryes_set')
+    manufacturer = serializers.PrimaryKeyRelatedField(queryset=Manufacturers.objects.all())
+    category = serializers.PrimaryKeyRelatedField(queryset=Categoryes.objects.all())
 
     class Meta:
         model = SpareParts

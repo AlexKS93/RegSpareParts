@@ -43,7 +43,7 @@ def get_fields_list(request):
 class UserViewSet(DjoserUserViewSet, viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
-    #permission_classes = (permissions.DjangoModelPermissions,)
+    permission_classes = (permissions.DjangoModelPermissions,)
     filter_backends = (filters.SearchFilter,)
     search_fields = ('id',)
     lookup_field = 'id'

@@ -4,7 +4,6 @@ from reg.views import CategoryesViewSet, SparePartsViewSet, ManufacturersViewSet
 from rest_framework import routers
 
 
-
 router = routers.DefaultRouter()
 
 

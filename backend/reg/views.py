@@ -28,6 +28,7 @@ class SparePartsViewSet(viewsets.ModelViewSet):
                      SparePartsEvents,
                      serializer.validated_data,
                      rec)
+
     # def create(self, serializer):
     #     serializer = self.get_serializer(data=self.request.data)
     #     serializer.is_valid(raise_exception=True)
@@ -38,10 +39,10 @@ class SparePartsViewSet(viewsets.ModelViewSet):
     #     user.save()
     #     return response.Response(serializer.data, status.HTTP_200_OK)
 
-    # def get_serializer_class(self, *args, **kwargs):
-    #     if self.request.method == 'GET':
-    #         return SparePartSerializer
-    #     return SparePartPOSTSerializer
+    def get_serializer_class(self, *args, **kwargs):
+        if self.request.method == 'GET':
+            return SparePartSerializer
+        return SparePartPOSTSerializer
 
 
 class CategoryesViewSet(viewsets.ModelViewSet):
