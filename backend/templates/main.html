@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ru">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -22,10 +22,10 @@
     <script src="https://unpkg.com/bootstrap-table@1.22.1/dist/extensions/export/bootstrap-table-export.min.js"></script>
   </head>
   <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav  id="navbar" class="navbar navbar-expand-lg navbar-light bg-light">
       <div class="container-fluid">
         <a class="navbar-brand" href="#">
-          <img src="static/favicon.ico" alt="" width="30" height="24" class="d-inline-block align-text-top">
+          <img src="/static/favicon.ico" alt="" width="30" height="24" class="d-inline-block align-text-top">
           АИС "Менеджмент АСУТП"
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Переключатель навигации">
@@ -48,13 +48,15 @@
             <li class="nav-item">
               <a class="nav-link disabled">Журнал плановых работ</a>
             </li>
-            <div v-if="is_auth == 'true'">
+            <div v-if="localStorage.is_auth">
               <li class="nav-item align-right">
-                <a class="nav-link">
-                  Пользователь: {{ username }}
+                <a v-text="localStorage.username" class="nav-link">
+                  
                   <br>
                 </a>
+                
               </li>
+              <button class="btn btn-secondary" @click="clientLogout">Выйти</button>
             </div>
             <div v-else>
               <li class="nav-item align-right">
@@ -163,10 +165,28 @@
     </div>
     <script>
       new Vue({
-        el:'#app',
-        data: {
-          product: "Socks",
-        } 
+        el:'#navbar',
+        data: ({
+          username: "Socks",
+          is_auth: true
+        }),
+        computed(){
+          this.username = localStorage.username;
+        },
+        methods:{
+          clientLogout(){
+                //localStorage.name = 'newName';
+                axios.post('/api/auth/token/logout/',
+                    { headers: {
+                        Authorization:'Token ' + localStorage.token,}
+
+                    })
+                    .then(function(response){
+                      localStorage.token = "";
+                      localStorage.is_auth = false;
+                    }.bind(this));
+              }
+        }
       })
     </script>
 
@@ -290,6 +310,7 @@
 
                     })
                     .then(function(response){
+                      this.username = response.data['username'];
                       localStorage.username = response.data['username'];
                       localStorage.role = response.data['role'];
                     }.bind(this));
@@ -297,9 +318,9 @@
               clientLogout(){
                 //localStorage.name = 'newName';
                 axios.post('/api/auth/token/logout/',
-                    {
-                      // username:this.username,
-                      // password:this.password
+                    { headers: {
+                        Authorization:'Token ' + localStorage.token,}
+
                     })
                     .then(function(response){
                       localStorage.token = "";
