@@ -91,14 +91,12 @@
               <!-- <form action="/api/spareparts/" method="post"> -->
               <form action="/api/spareparts/" method="post"></form>
                     <div class="modal-body">
-                      {% csrf_token %}
-                      
                       <div v-for="column in columns">
                         <div v-if="column.field != 'status'">
                           <div v-if="column.field == 'category'">
-                            <label  v-bind:for="column.field">{{column.title}}: </label>
+                            <label  v-model="column.title" type="text">{column.title}: </label>
                             <select v-bind:id="column.field" v-model="post_data[column.title]">
-                                <option v-for="category in categoryes" v-bind:value="category.id">{{ category.name }}</option>
+                                <option v-for="category in categoryes" v-bind:value="category.id">{ category.name }</option>
                             </select>
                             <br>
                           </div>
@@ -106,15 +104,15 @@
                             <!-- <select id="categories" v-model="selectedValue">
                               <option v-for="item in items" :value="item.id">{{ item.name }}</option>
                             </select> -->
-                            <label  v-bind:for="column.field">{{column.field}}</label>
-                            <select v-bind:id="column.field" v-bind:name="column.field">
-                              <option v-for="manufacturer in manufactures" v-bind:value="manufacturer.id">{{ manufacturer.name }}</option>
+                            <label  v-bind:for="column.field">{column.field}</label>
+                            <select v-bind:id="column.field" v-model="post_data[column.title]">
+                              <option v-for="manufacturer in manufactures" v-bind:value="manufacturer.id">{ manufacturer.name }</option>
                             </select>
                             <br>
                           </div>
                           <div v-else>
-                            <label  v-bind:for="column.field">{{column.title}}: </label>
-                            <input v-bind:id="column.field" type="text" v-bind:name="column.field">
+                            <label  v-bind:for="column.field">{column.title}: </label>
+                            <input v-model="post_data[column.title]" v-bind:id="column.field" type="text" v-bind:name="column.field">
                             <br>
                           </div>
                         </div>
@@ -193,6 +191,7 @@
     <!--//панель навигации-->
     <script>
       new Vue({
+        delimiters: ['{', '}'],
         el: '#table',
         components: {
           'BootstrapTable': BootstrapTable
@@ -247,7 +246,11 @@
                     axios.get('/api/get_fields_list/')
                     .then(function(response){
                     this.columns = response.data;
-                    this.post_data[this.columns[1].title] = "";
+                    for(column in this.columns)
+                    {
+                      this.post_data[column] = "";
+                    }
+                    
                     }.bind(this));
                     //создать словарь значений для отправки
                     
@@ -284,7 +287,11 @@
                 console.log(this.$refs.table.getSelections());
                 },
                 testClick(){
-                console.log(this.post_data);
+                  console.log(this.post_data);
+                  for(data in this.post_data){
+                    console.log(this.post_data[data]);
+                  }
+                //console.log(this.columns[1].field);
                 },
                 clientLogin(){
                 axios.post('/api/auth/token/login/',
