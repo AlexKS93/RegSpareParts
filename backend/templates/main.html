@@ -92,7 +92,7 @@
               <form action="/api/spareparts/" method="post"></form>
                     <div class="modal-body">
                       {% csrf_token %}
-                      {% verbatim %}
+                      
                       <div v-for="column in columns">
                         <div v-if="column.field != 'status'">
                           <div v-if="column.field == 'category'">
@@ -119,7 +119,7 @@
                           </div>
                         </div>
                       </div>
-                        {% endverbatim %}
+                        
                         <button id="bron-button2" class="btn btn-secondary" @click="testClick">Забронировать</button>
                     </div>
                     <div class="modal-footer">
