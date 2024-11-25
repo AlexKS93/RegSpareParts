@@ -89,16 +89,14 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
               <!-- <form action="/api/spareparts/" method="post"> -->
-              <form action="/api/spareparts/" method="post"></form>
+              
                     <div class="modal-body">
-                      {% csrf_token %}
-                      
                       <div v-for="column in columns">
                         <div v-if="column.field != 'status'">
                           <div v-if="column.field == 'category'">
-                            <label  v-bind:for="column.field">{{column.title}}: </label>
-                            <select v-bind:id="column.field" v-model="post_data[column.title]">
-                                <option v-for="category in categoryes" v-bind:value="category.id">{{ category.name }}</option>
+                            <label  v-bind:for="column.field" type="text">Категория: </label>
+                            <select v-bind:id="column.field" v-model="post_data[column.field]">
+                                <option v-for="category in categoryes" v-bind:value="category.id">{ category.name }</option>
                             </select>
                             <br>
                           </div>
@@ -106,15 +104,15 @@
                             <!-- <select id="categories" v-model="selectedValue">
                               <option v-for="item in items" :value="item.id">{{ item.name }}</option>
                             </select> -->
-                            <label  v-bind:for="column.field">{{column.field}}</label>
-                            <select v-bind:id="column.field" v-bind:name="column.field">
-                              <option v-for="manufacturer in manufactures" v-bind:value="manufacturer.id">{{ manufacturer.name }}</option>
+                            <label  v-bind:for="column.field">Производитель: </label>
+                            <select v-bind:id="column.field" v-model="post_data[column.field]">
+                              <option v-for="manufacturer in manufactures" v-bind:value="manufacturer.id">{ manufacturer.name }</option>
                             </select>
                             <br>
                           </div>
                           <div v-else>
-                            <label  v-bind:for="column.field">{{column.title}}: </label>
-                            <input v-bind:id="column.field" type="text" v-bind:name="column.field">
+                            <label  v-bind:for="column.field">{column.title}: </label>
+                            <input v-model="post_data[column.field]" v-bind:id="column.field" type="text" v-bind:name="column.field">
                             <br>
                           </div>
                         </div>
@@ -123,9 +121,9 @@
                         <button id="bron-button2" class="btn btn-secondary" @click="testClick">Забронировать</button>
                     </div>
                     <div class="modal-footer">
-                      <input type="submit" class="btn btn-primary" value="Добавить"></input>
+                      <input type="submit" class="btn btn-primary" value="Добавить" @click="postApiRegParts"></input>
                     </div>
-              </form>
+              
           </div>
         </div>
       </div>
@@ -149,7 +147,7 @@
                     </div>
                     <div class="modal-footer">
                       <!-- <input type="submit" class="btn btn-primary" value="Войти" @click="deleteClick"></input> -->
-                      <button id="login-button" class="btn btn-secondary" @click="clientLogin">Войти</button>
+                      <button  id="login-button" class="btn btn-secondary" @click="clientLogin">Войти</button>
                     </div>
               </form>
           </div>
@@ -174,18 +172,21 @@
                         },
           clientLogout(){
                 //localStorage.name = 'newName';
+                var token = localStorage.token;
+                localStorage.token = "";
+                localStorage.is_auth = false;
+                
                 axios.post('/api/auth/token/logout/',{},
                             { headers: {
-                              Authorization:'Token ' + localStorage.token}
+                              Authorization:'Token ' + token}
 
                             }
                           )
                     .then(function(response){
-                      localStorage.token = "";
-                      localStorage.is_auth = false;
+                      
                       this.reloadPage();
                     }.bind(this));
-              }
+                }
           
         }
       })
@@ -193,6 +194,7 @@
     <!--//панель навигации-->
     <script>
       new Vue({
+        delimiters: ['{', '}'],
         el: '#table',
         components: {
           'BootstrapTable': BootstrapTable
@@ -200,6 +202,7 @@
         data: ({
           columns :[],
           data: [],
+          data_:"",
           post_data: {},
           manufactures: [],
           categoryes: [],
@@ -241,13 +244,41 @@
                 reloadPage() {
                     window.location.reload();
                         },
+                postApiRegParts() {
+                  let body = JSON.stringify(
+                  {
+                    data: this.post_data
+                  });
+                  //this.data_= "";
+                  //this.data_ = "{";
+
+                  console.log(this.post_data);
+                  /*for(data in this.post_data){
+                    this.data_ = this.data_ + `"${data}":"${this.post_data[data]}",`;
+                  }*/
+                  //this. data_ = this.data_ + "}"
+                  
+                  axios.post('/api/spareparts/', this.post_data,
+                  {
+                    headers: {
+                        Authorization:'Token ' + localStorage.token,}
+                    })
+                    .then(function(response){
+                      this.reloadPage();
+                    }.bind(this));
+                },
                 getApiFields_list: function()
                 {
                     //const vm = this;
                     axios.get('/api/get_fields_list/')
                     .then(function(response){
                     this.columns = response.data;
-                    this.post_data[this.columns[1].title] = "";
+                    /*for(column in this.columns)
+                    { 
+                      console.log(column)
+                      this.post_data[column] = "";
+                    }*/
+                    
                     }.bind(this));
                     //создать словарь значений для отправки
                     
@@ -284,7 +315,15 @@
                 console.log(this.$refs.table.getSelections());
                 },
                 testClick(){
-                console.log(this.post_data);
+                  data_ = "{";
+
+                  console.log(this.post_data);
+                  for(data in this.post_data){
+                    data_ = data_ + `"${data}":${this.post_data[data]}`;
+                    console.log(`"${data}":${this.post_data[data]}`);
+                  }
+                  data_ = data_ + "}"
+                console.log(data_);
                 },
                 clientLogin(){
                 axios.post('/api/auth/token/login/',
