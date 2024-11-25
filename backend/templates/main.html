@@ -89,12 +89,12 @@
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
               <!-- <form action="/api/spareparts/" method="post"> -->
-              <form action="/api/spareparts/" method="post"></form>
+              
                     <div class="modal-body">
                       <div v-for="column in columns">
                         <div v-if="column.field != 'status'">
                           <div v-if="column.field == 'category'">
-                            <label  v-model="column.title" type="text">{column.title}: </label>
+                            <label  v-bind:for="column.field" type="text">Категория: </label>
                             <select v-bind:id="column.field" v-model="post_data[column.field]">
                                 <option v-for="category in categoryes" v-bind:value="category.id">{ category.name }</option>
                             </select>
@@ -104,7 +104,7 @@
                             <!-- <select id="categories" v-model="selectedValue">
                               <option v-for="item in items" :value="item.id">{{ item.name }}</option>
                             </select> -->
-                            <label  v-bind:for="column.field">{column.field}</label>
+                            <label  v-bind:for="column.field">Производитель: </label>
                             <select v-bind:id="column.field" v-model="post_data[column.field]">
                               <option v-for="manufacturer in manufactures" v-bind:value="manufacturer.id">{ manufacturer.name }</option>
                             </select>
@@ -123,7 +123,7 @@
                     <div class="modal-footer">
                       <input type="submit" class="btn btn-primary" value="Добавить" @click="postApiRegParts"></input>
                     </div>
-              </form>
+              
           </div>
         </div>
       </div>
@@ -147,7 +147,7 @@
                     </div>
                     <div class="modal-footer">
                       <!-- <input type="submit" class="btn btn-primary" value="Войти" @click="deleteClick"></input> -->
-                      <button id="login-button" class="btn btn-secondary" @click="clientLogin">Войти</button>
+                      <button  id="login-button" class="btn btn-secondary" @click="clientLogin">Войти</button>
                     </div>
               </form>
           </div>
@@ -172,18 +172,21 @@
                         },
           clientLogout(){
                 //localStorage.name = 'newName';
+                var token = localStorage.token;
+                localStorage.token = "";
+                localStorage.is_auth = false;
+                
                 axios.post('/api/auth/token/logout/',{},
                             { headers: {
-                              Authorization:'Token ' + localStorage.token}
+                              Authorization:'Token ' + token}
 
                             }
                           )
                     .then(function(response){
-                      localStorage.token = "";
-                      localStorage.is_auth = false;
+                      
                       this.reloadPage();
                     }.bind(this));
-              }
+                }
           
         }
       })
@@ -242,24 +245,26 @@
                     window.location.reload();
                         },
                 postApiRegParts() {
-                  this.data_= "";
-                  this.data_ = "{";
+                  let body = JSON.stringify(
+                  {
+                    data: this.post_data
+                  });
+                  //this.data_= "";
+                  //this.data_ = "{";
 
-                  //console.log(this.post_data);
-                  for(data in this.post_data){
-                    this.data_ = this.data_ + `${data}:${this.post_data[data]},`;
-                  }
-                  this. data_ = this.data_ + "}"
-                
-                  axios.post('/api/spareparts/', this.data_,
-                  { headers: {
+                  console.log(this.post_data);
+                  /*for(data in this.post_data){
+                    this.data_ = this.data_ + `"${data}":"${this.post_data[data]}",`;
+                  }*/
+                  //this. data_ = this.data_ + "}"
+                  
+                  axios.post('/api/spareparts/', this.post_data,
+                  {
+                    headers: {
                         Authorization:'Token ' + localStorage.token,}
                     })
                     .then(function(response){
-                      localStorage.token = response.data['auth_token'];
-                      localStorage.is_auth = true;
-
-                      this.getUserInfo();
+                      this.reloadPage();
                     }.bind(this));
                 },
                 getApiFields_list: function()
