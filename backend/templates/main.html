@@ -95,7 +95,7 @@
                         <div v-if="column.field != 'status'">
                           <div v-if="column.field == 'category'">
                             <label  v-model="column.title" type="text">{column.title}: </label>
-                            <select v-bind:id="column.field" v-model="post_data[column.title]">
+                            <select v-bind:id="column.field" v-model="post_data[column.field]">
                                 <option v-for="category in categoryes" v-bind:value="category.id">{ category.name }</option>
                             </select>
                             <br>
@@ -105,14 +105,14 @@
                               <option v-for="item in items" :value="item.id">{{ item.name }}</option>
                             </select> -->
                             <label  v-bind:for="column.field">{column.field}</label>
-                            <select v-bind:id="column.field" v-model="post_data[column.title]">
+                            <select v-bind:id="column.field" v-model="post_data[column.field]">
                               <option v-for="manufacturer in manufactures" v-bind:value="manufacturer.id">{ manufacturer.name }</option>
                             </select>
                             <br>
                           </div>
                           <div v-else>
                             <label  v-bind:for="column.field">{column.title}: </label>
-                            <input v-model="post_data[column.title]" v-bind:id="column.field" type="text" v-bind:name="column.field">
+                            <input v-model="post_data[column.field]" v-bind:id="column.field" type="text" v-bind:name="column.field">
                             <br>
                           </div>
                         </div>
@@ -121,7 +121,7 @@
                         <button id="bron-button2" class="btn btn-secondary" @click="testClick">Забронировать</button>
                     </div>
                     <div class="modal-footer">
-                      <input type="submit" class="btn btn-primary" value="Добавить"></input>
+                      <input type="submit" class="btn btn-primary" value="Добавить" @click="postApiRegParts"></input>
                     </div>
               </form>
           </div>
@@ -199,6 +199,7 @@
         data: ({
           columns :[],
           data: [],
+          data_:"",
           post_data: {},
           manufactures: [],
           categoryes: [],
@@ -240,16 +241,38 @@
                 reloadPage() {
                     window.location.reload();
                         },
+                postApiRegParts() {
+                  this.data_= "";
+                  this.data_ = "{";
+
+                  //console.log(this.post_data);
+                  for(data in this.post_data){
+                    this.data_ = this.data_ + `${data}:${this.post_data[data]},`;
+                  }
+                  this. data_ = this.data_ + "}"
+                
+                  axios.post('/api/spareparts/', this.data_,
+                  { headers: {
+                        Authorization:'Token ' + localStorage.token,}
+                    })
+                    .then(function(response){
+                      localStorage.token = response.data['auth_token'];
+                      localStorage.is_auth = true;
+
+                      this.getUserInfo();
+                    }.bind(this));
+                },
                 getApiFields_list: function()
                 {
                     //const vm = this;
                     axios.get('/api/get_fields_list/')
                     .then(function(response){
                     this.columns = response.data;
-                    for(column in this.columns)
-                    {
+                    /*for(column in this.columns)
+                    { 
+                      console.log(column)
                       this.post_data[column] = "";
-                    }
+                    }*/
                     
                     }.bind(this));
                     //создать словарь значений для отправки
@@ -287,11 +310,15 @@
                 console.log(this.$refs.table.getSelections());
                 },
                 testClick(){
+                  data_ = "{";
+
                   console.log(this.post_data);
                   for(data in this.post_data){
-                    console.log(this.post_data[data]);
+                    data_ = data_ + `"${data}":${this.post_data[data]}`;
+                    console.log(`"${data}":${this.post_data[data]}`);
                   }
-                //console.log(this.columns[1].field);
+                  data_ = data_ + "}"
+                console.log(data_);
                 },
                 clientLogin(){
                 axios.post('/api/auth/token/login/',
